@@ -1,7 +1,3 @@
-import re
-from os.path import join, dirname
-from os import listdir
-
 from setuptools import setup
 
 # All your settings
