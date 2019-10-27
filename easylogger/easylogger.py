@@ -50,7 +50,7 @@ class Logger(logging.Logger):
 
 class LoggingClass(object):
     def __init__(self, name=None, log=None, **kwargs):
-        self.name = name = name if name is not None else self.__class__.__name__
+        self.__name = name = name if name is not None else self.__class__.__name__
         if log is not None:
             self.__log = log.copy(name)
         else:
@@ -65,7 +65,7 @@ class LoggingClass(object):
         return self.__log
 
     def reset_log(self):
-        self.__log = Logger(self.name, **self.logging_options)
+        self.__log = Logger(self.__name, **self.logging_options)
 
     def warning(self, *args, **kwargs):
         self.__log.warning(*args, **kwargs)
