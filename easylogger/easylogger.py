@@ -13,10 +13,10 @@ log_colors = {
     'CRITICAL': 'black,bg_green',
 }
 
-
 class Logger(logging.Logger):
+
     def __init__(self, name, log_file=None, log_level_file=logging.DEBUG, log_level_console=logging.INFO,
-                 color_file=True, color_console=True):
+                 color_file=True, color_console=True, time_in_formatter=False):
         self.log_level_console = log_level_console
         self.log_level_file = log_level_file
         self.log_file = log_file
@@ -24,18 +24,16 @@ class Logger(logging.Logger):
         super(Logger, self).__init__(name)
         using_log_file = log_file is not None
         self.setLevel(log_level_file if using_log_file else log_level_console)
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        colored_formatter = colorlog.ColoredFormatter('%(log_color)s%(levelname)s:%(name)s:   %(message)s',
-                                                      log_colors=log_colors)
         if using_log_file:
             fh = logging.FileHandler(log_file)
             fh.setLevel(log_level_file)
-            fh.setFormatter(colored_formatter if color_file else formatter)
+            fh.setFormatter(self.formatter(time_in_formatter, color_file))
             self.addHandler(fh)
         ch = colorlog.StreamHandler()
         ch.setLevel(log_level_console)
-        ch.setFormatter(colored_formatter if color_console else formatter)
+        ch.setFormatter(self.formatter(time_in_formatter, color_console))
         self.addHandler(ch)
+        return
 
     def copy(self, new_name=None):
         if new_name is None:
@@ -46,6 +44,18 @@ class Logger(logging.Logger):
     def logging_options(self):
         return dict(log_file=self.log_file, log_level_file=self.log_level_file,
                     log_level_console=self.log_level_console)
+
+    def formatter(self, time=False, color=True):
+        res = '%(levelname)s:%(name)s:   %(message)s'
+        if time:
+            res = "%(asctime)s  " + res
+        if color:
+            res = "%(log_color)s" + res
+        if color:
+            formatter = colorlog.ColoredFormatter(res, log_colors=log_colors)
+        else:
+            formatter = logging.Formatter(res)
+        return formatter
 
 
 class LoggingClass(object):
