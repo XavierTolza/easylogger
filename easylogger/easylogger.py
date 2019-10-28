@@ -66,10 +66,6 @@ class LoggingClass(object):
         else:
             self.__log = Logger(name, **kwargs)
 
-    def __del__(self):
-        for i in self.__log.handlers:
-            i.close()
-
     @property
     def log(self):
         return self.__log
