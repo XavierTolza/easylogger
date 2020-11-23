@@ -1,3 +1,4 @@
+import inspect
 import logging
 import sys
 
@@ -13,6 +14,7 @@ log_colors = {
     'CRITICAL': 'black,bg_green',
 }
 
+
 class Logger(logging.Logger):
 
     def __init__(self, name, log_file=None, log_level_file=logging.DEBUG, log_level_console=logging.INFO,
@@ -20,6 +22,9 @@ class Logger(logging.Logger):
         self.log_level_console = log_level_console
         self.log_level_file = log_level_file
         self.log_file = log_file
+        self.color_file = color_file
+        self.color_console = color_console
+        self.time_in_formatter = time_in_formatter
         self.name = name
         super(Logger, self).__init__(name)
         using_log_file = log_file is not None
@@ -100,5 +105,6 @@ class LoggingClass(object):
 
     @property
     def logging_options(self):
-        return dict(log_file=self.__log.log_file, log_level_file=self.__log.log_level_file,
-                    log_level_console=self.__log.log_level_console)
+        elements = list(inspect.signature(Logger.__init__).parameters)[2:]
+        result = {i: getattr(self.__log, i) for i in elements}
+        return result
