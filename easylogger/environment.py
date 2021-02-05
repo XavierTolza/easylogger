@@ -11,11 +11,13 @@ def get_logging_options_from_env():
         color_console=("LOG_COLOR_CONSOLE", True),
         time_in_formatter=("LOG_TIME_IN_FORMATTER", True)
     )
-    res = {k: getenv(v, default) for k, (v, default) in res}
+    res = {k: getenv(v, default) for k, (v, default) in res.items()}
 
     # Change levels type
     for k, v in res.items():
         if "log_level" in k.lower():
             res[k] = getattr(logging, v)
+        elif (v_str := str(v).lower()) in ("true", "false"):
+            res[k] = True if v_str[0] == "t" else False
 
     return res
