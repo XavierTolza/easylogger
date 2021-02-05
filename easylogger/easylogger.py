@@ -1,6 +1,7 @@
 import inspect
 import logging
 import sys
+import traceback
 
 import colorlog
 from colorlog import escape_codes
@@ -112,3 +113,16 @@ class LoggingClass(object):
         elements = self.logging_options_names
         result = {i: getattr(self.__log, i) for i in elements}
         return result
+
+    def assert_error(self, condition: bool, message: str):
+        if not condition:
+            self.error(message)
+
+    def get_traceback(self) -> str:
+        return traceback.format_exc()
+
+    def filter_kwargs(self, **kwargs):
+        names = self.logging_options_names
+        kwargs1 = {k: v for k, v in kwargs.items() if k in names}
+        kwargs2 = {k: v for k, v in kwargs.items() if k not in names}
+        return kwargs1, kwargs2
