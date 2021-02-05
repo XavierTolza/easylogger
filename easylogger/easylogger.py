@@ -104,7 +104,11 @@ class LoggingClass(object):
         return tqdm(it, file=sys.stdout, **kwargs)
 
     @property
+    def logging_options_names(self):
+        return list(inspect.signature(Logger.__init__).parameters)[2:]
+
+    @property
     def logging_options(self):
-        elements = list(inspect.signature(Logger.__init__).parameters)[2:]
+        elements = self.logging_options_names
         result = {i: getattr(self.__log, i) for i in elements}
         return result
