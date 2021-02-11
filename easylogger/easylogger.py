@@ -6,6 +6,7 @@ import traceback
 import colorlog
 from colorlog import escape_codes
 from tqdm import tqdm
+from easylogger import get_logging_options_from_env
 
 log_colors = {
     'DEBUG': 'white',
@@ -67,6 +68,7 @@ class Logger(logging.Logger):
 class LoggingClass(object):
     def __init__(self, name=None, log=None, **kwargs):
         self.__name = name = name if name is not None else self.__class__.__name__
+        kwargs = {**get_logging_options_from_env(), **kwargs}
         if log is not None:
             self.__log = log.copy(name)
         else:
