@@ -15,9 +15,10 @@ def get_logging_options_from_env():
 
     # Change levels type
     for k, v in res.items():
+        v_str = str(v).lower()
         if "log_level" in k.lower():
             res[k] = getattr(logging, v)
-        elif (v_str := str(v).lower()) in ("true", "false"):
+        elif v_str in ("true", "false"):
             res[k] = True if v_str[0] == "t" else False
 
     return res
