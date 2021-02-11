@@ -1,2 +1,2 @@
-from easylogger.easylogger import Logger, LoggingClass
 from easylogger.environment import get_logging_options_from_env
+from easylogger.easylogger import Logger, LoggingClass
