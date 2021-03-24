@@ -5,7 +5,10 @@ import traceback
 
 import colorlog
 from colorlog import escape_codes
-from tqdm import tqdm
+try:
+    from tqdm import tqdm
+except ImportError:
+    pass
 from easylogger import get_logging_options_from_env
 
 log_colors = {
